@@ -34,6 +34,7 @@ app.use(cors({
     origin:"https://vingo-gtez.onrender.com",
     credentials:true
 }))
+
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/auth",authRouter)
