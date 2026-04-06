@@ -25,6 +25,8 @@ function useGetCity() {
 
       dispatch(setLocation({ lat: latitude, lon: longitude }))
       fetchCity(latitude, longitude)
+    }, (error) => {
+      console.log("Geolocation error:", error)
     })
 
   }, [userData, isDemo, location.lat, location.lon])

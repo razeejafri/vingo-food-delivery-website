@@ -18,27 +18,29 @@ function OwnerItemCard({data}) {
       }
     }
   return (
-    <div className='flex bg-white rounded-lg shadow-md overflow-hidden border border-[#ff4d2d] w-full max-w-2xl'>
-      <div className='w-36  flex-shrink-0 bg-gray-50'>
-        <img src={data.image} alt="" className='w-full h-full object-cover'/>
+    <div className='flex bg-white rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-hidden border border-gray-100 hover:border-[#ff4d2d]/30 transition-all duration-300 w-full group'>
+      <div className='w-36 sm:w-48 flex-shrink-0 bg-gray-50 overflow-hidden relative'>
+        <img src={data.image} alt="" className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-500'/>
+        <div className='absolute inset-0 bg-gradient-to-r from-transparent to-black/10'></div>
       </div>
-      <div className='flex flex-col justify-between p-3 flex-1'>
+      <div className='flex flex-col justify-between p-4 sm:p-5 flex-1 bg-gradient-to-r from-white to-orange-50/20'>
           <div>
-<h2 className='text-base font-semibold text-[#ff4d2d]'>{data.name}</h2>
-<p><span className='font-medium text-gray-70'>Category:</span> {data.category}</p>
-<p><span className='font-medium text-gray-70'>Food Type:</span> {data.foodType}</p>
+            <h2 className='text-lg font-bold text-gray-900 mb-1 group-hover:text-[#ff4d2d] transition-colors'>{data.name}</h2>
+            <div className='flex flex-col gap-0.5 text-sm mb-3'>
+              <p><span className='font-semibold text-gray-400 text-xs uppercase tracking-wider mr-1'>Category:</span> <span className='text-gray-700 font-medium'>{data.category}</span></p>
+              <p><span className='font-semibold text-gray-400 text-xs uppercase tracking-wider mr-1'>Type:</span> <span className='text-gray-700 font-medium'>{data.foodType}</span></p>
+            </div>
           </div>
-          <div className='flex items-center justify-between'>
-            <div className='text-[#ff4d2d] font-bold'>{data.price}</div>
-          <div className='flex items-center gap-2'>
-<div className='p-2 cursor-pointer rounded-full hover:bg-[#ff4d2d]/10  text-[#ff4d2d]' onClick={()=>navigate(`/edit-item/${data._id}`)}>
-<FaPen size={16}/>
-</div>
-<div className='p-2 cursor-pointer rounded-full hover:bg-[#ff4d2d]/10  text-[#ff4d2d]' onClick={handleDelete}>
-<FaTrashAlt size={16}/>
-</div>
-          </div>
-
+          <div className='flex items-center justify-between border-t border-gray-100 pt-3'>
+            <div className='text-[#ff4d2d] font-extrabold text-xl'>₹{data.price}</div>
+            <div className='flex items-center gap-2'>
+              <div className='p-2 cursor-pointer rounded-xl bg-orange-50 hover:bg-[#ff4d2d] text-[#ff4d2d] hover:text-white shadow-sm transition-all duration-300 active:scale-95' onClick={()=>navigate(`/edit-item/${data._id}`)}>
+                <FaPen size={14}/>
+              </div>
+              <div className='p-2 cursor-pointer rounded-xl bg-red-50 hover:bg-red-500 text-red-500 hover:text-white shadow-sm transition-all duration-300 active:scale-95' onClick={handleDelete}>
+                <FaTrashAlt size={14}/>
+              </div>
+            </div>
           </div>
       </div>
     </div>

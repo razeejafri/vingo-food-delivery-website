@@ -35,49 +35,80 @@ setLiveLocations(prev=>({
         handleGetOrder()
     }, [orderId])
     return (
-        <div className='max-w-4xl mx-auto p-4 flex flex-col gap-6'>
-            <div className='relative flex items-center gap-4 top-[20px] left-[20px] z-[10] mb-[10px]' onClick={() => navigate("/")}>
-                <IoIosArrowRoundBack size={35} className='text-[#ff4d2d]' />
-                <h1 className='text-2xl font-bold md:text-center'>Track Order</h1>
+        <div className='w-full min-h-screen bg-gradient-to-br from-[#fff9f6] to-[#ffe5db] pb-16'>
+            <div className='max-w-4xl mx-auto px-4 sm:px-6 pt-10 flex flex-col gap-8'>
+                <div className='flex items-center gap-4 bg-white/60 backdrop-blur-md p-4 rounded-3xl border border-white/50 shadow-sm'>
+                    <button className='w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-100 hover:shadow-md hover:scale-105 transition-all text-gray-600 hover:text-[#ff4d2d] z-[10]' onClick={() => navigate("/")}>
+                        <IoIosArrowRoundBack size={28} />
+                    </button>
+                    <h1 className='text-3xl font-extrabold text-gray-900 tracking-tight'>Track Order</h1>
+                </div>
+
+                <div className='flex flex-col gap-8'>
+                  {currentOrder?.shopOrders?.map((shopOrder,index)=>(
+                    <div className='bg-white/90 backdrop-blur-xl p-6 sm:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-white relative overflow-hidden group' key={index}>
+                     <div className='absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-full pointer-events-none z-0'></div>
+                     <div className='relative z-10 space-y-6'>
+                         
+                         <div className='border-b border-gray-100 pb-5'>
+                            <p className='text-2xl font-extrabold mb-2 text-gray-900 flex items-center gap-2 tracking-tight'>
+                                <span className='w-2 h-6 bg-[#ff4d2d] rounded-full'></span>
+                                {shopOrder.shop.name}
+                            </p>
+                            <p className='text-gray-600 font-medium mb-1 flex gap-2'>
+                                <span className='text-xs font-bold uppercase tracking-widest text-gray-400 mt-1'>Items</span> 
+                                <span>{shopOrder.shopOrderItems?.map(i=>i.name).join(", ")}</span>
+                            </p>
+                            <p className='flex justify-between items-center bg-gray-50 p-3 rounded-xl mt-3 border border-gray-100'>
+                                <span className='text-xs font-bold uppercase tracking-widest text-gray-500'>Subtotal</span> 
+                                <span className='font-extrabold text-[#ff4d2d] text-lg'>₹{shopOrder.subtotal}</span>
+                            </p>
+                            <p className='mt-4 flex gap-2 text-sm'>
+                                <span className='text-xs font-bold uppercase tracking-widest text-gray-400 mt-0.5 shrink-0'>Delivery to</span> 
+                                <span className='text-gray-700 font-medium'>{currentOrder.deliveryAddress?.text}</span>
+                            </p>
+                         </div>
+
+                         {shopOrder.status!="delivered" ? <>
+                            {shopOrder.assignedDeliveryBoy ?
+                            <div className='flex items-center gap-4 bg-orange-50/50 p-4 rounded-2xl border border-orange-100'>
+                                <div className='w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-xl'>🛵</div>
+                                <div>
+                                    <p className='text-xs font-bold uppercase tracking-widest text-orange-400 mb-0.5'>Assigned Courier</p>
+                                    <p className='font-extrabold text-gray-800 text-lg leading-tight'>{shopOrder.assignedDeliveryBoy.fullName}</p>
+                                    <p className='text-gray-500 text-sm font-mono mt-0.5'>{shopOrder.assignedDeliveryBoy.mobile}</p>
+                                </div>
+                            </div> : 
+                            <div className='bg-gray-50 p-4 rounded-xl border border-dashed border-gray-200 text-center'>
+                                <p className='font-bold text-gray-500 animate-pulse'>Finding a delivery partner nearby...</p>
+                            </div>}
+                         </> : 
+                            <div className='bg-green-50 px-6 py-4 rounded-2xl border border-green-100 flex items-center gap-3'>
+                                <span className='w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold'>✓</span>
+                                <p className='text-green-700 font-extrabold text-lg tracking-wide uppercase'>Delivered Successfully</p>
+                            </div>
+                         }
+
+                         {(shopOrder.assignedDeliveryBoy && shopOrder.status !== "delivered") && (
+                          <div className="h-[400px] w-full rounded-2xl overflow-hidden shadow-inner border border-gray-200 relative z-10">
+                            <DeliveryBoyTracking data={{
+                              deliveryBoyLocation:liveLocations[shopOrder.assignedDeliveryBoy._id] || {
+                                lat: shopOrder.assignedDeliveryBoy.location.coordinates[1],
+                                lon: shopOrder.assignedDeliveryBoy.location.coordinates[0]
+                              },
+                              customerLocation: {
+                                lat: currentOrder.deliveryAddress.latitude,
+                                lon: currentOrder.deliveryAddress.longitude
+                              }
+                            }} />
+                          </div>
+                         )}
+
+                     </div>
+                    </div>
+                  ))}
+                </div>
             </div>
-      {currentOrder?.shopOrders?.map((shopOrder,index)=>(
-        <div className='bg-white p-4 rounded-2xl shadow-md border border-orange-100 space-y-4' key={index}>
-         <div>
-            <p className='text-lg font-bold mb-2 text-[#ff4d2d]'>{shopOrder.shop.name}</p>
-            <p className='font-semibold'><span>Items:</span> {shopOrder.shopOrderItems?.map(i=>i.name).join(",")}</p>
-            <p><span className='font-semibold'>Subtotal:</span> {shopOrder.subtotal}</p>
-            <p className='mt-6'><span className='font-semibold'>Delivery address:</span> {currentOrder.deliveryAddress?.text}</p>
-         </div>
-         {shopOrder.status!="delivered"?<>
-{shopOrder.assignedDeliveryBoy?
-<div className='text-sm text-gray-700'>
-<p className='font-semibold'><span>Delivery Boy Name:</span> {shopOrder.assignedDeliveryBoy.fullName}</p>
-<p className='font-semibold'><span>Delivery Boy contact No.:</span> {shopOrder.assignedDeliveryBoy.mobile}</p>
-</div>:<p className='font-semibold'>Delivery Boy is not assigned yet.</p>}
-         </>:<p className='text-green-600 font-semibold text-lg'>Delivered</p>}
-
-{(shopOrder.assignedDeliveryBoy && shopOrder.status !== "delivered") && (
-  <div className="h-[400px] w-full rounded-2xl overflow-hidden shadow-md">
-    <DeliveryBoyTracking data={{
-      deliveryBoyLocation:liveLocations[shopOrder.assignedDeliveryBoy._id] || {
-        lat: shopOrder.assignedDeliveryBoy.location.coordinates[1],
-        lon: shopOrder.assignedDeliveryBoy.location.coordinates[0]
-      },
-      customerLocation: {
-        lat: currentOrder.deliveryAddress.latitude,
-        lon: currentOrder.deliveryAddress.longitude
-      }
-    }} />
-  </div>
-)}
-
-
-
-        </div>
-      ))}
-
-
-
         </div>
     )
 }

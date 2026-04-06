@@ -41,54 +41,59 @@ const newQty=quantity-1
 }
 
   return (
-    <div className='w-[250px] rounded-2xl border-2 border-[#ff4d2d] bg-white shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col'>
-      <div className='relative w-full h-[170px] flex justify-center items-center bg-white'>
-        <div className='absolute top-3 right-3 bg-white rounded-full p-1 shadow'>{data.foodType=="veg"?<FaLeaf className='text-green-600 text-lg'/>:<FaDrumstickBite className='text-red-600 text-lg'/>}</div>
+    <div className='w-[250px] rounded-2xl border border-gray-100 bg-white shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(255,77,45,0.1)] hover:-translate-y-1 overflow-hidden transition-all duration-300 flex flex-col group'>
+      <div className='relative w-full h-[180px] flex justify-center items-center bg-gray-50 overflow-hidden'>
+        <div className='absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-sm z-10'>
+          {data.foodType=="veg" ? <FaLeaf className='text-green-500 text-[16px]'/> : <FaDrumstickBite className='text-red-500 text-[16px]'/>}
+        </div>
 
-
-<img src={data.image} alt="" className='w-full h-full object-cover transition-transform duration-300 hover:scale-105'/>
+        <img src={data.image} alt="" className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'/>
+        <div className='absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
       </div>
 
-      <div className="flex-1 flex flex-col p-4">
-<h1 className='font-semibold text-gray-900 text-base truncate'>{data.name}</h1>
+      <div className="flex-1 flex flex-col p-4 bg-white z-10">
+        <h1 className='font-bold text-gray-800 text-[17px] truncate mb-1'>{data.name}</h1>
 
-<div className='flex items-center gap-1 mt-1'>
-{renderStars(data.rating?.average || 0)}
-<span className='text-xs text-gray-500'>
-    {data.rating?.count || 0}
-</span>
-</div>
+        <div className='flex items-center gap-1.5'>
+          <div className='flex items-center'>
+            {renderStars(data.rating?.average || 0)}
+          </div>
+          <span className='text-xs text-gray-500 font-medium bg-gray-100 px-1.5 py-0.5 rounded-md'>
+              {data.rating?.count || 0} reviews
+          </span>
+        </div>
       </div>
 
-<div className='flex items-center justify-between mt-auto p-3'>
-<span className='font-bold text-gray-900 text-lg'>
-    ₹{data.price}
-</span>
+      <div className='flex items-center justify-between mt-auto p-4 pt-0 border-t border-gray-50 bg-white'>
+        <div className='flex flex-col'>
+          <span className='text-[11px] text-gray-400 font-medium uppercase tracking-wider mb-0.5'>Price</span>
+          <span className='font-bold text-[#ff4d2d] text-xl'>
+              ₹{data.price}
+          </span>
+        </div>
 
-<div className='flex items-center border rounded-full overflow-hidden shadow-sm'>
-<button className='px-2 py-1 hover:bg-gray-100 transition' onClick={handleDecrease}>
-<FaMinus size={12}/>
-</button>
-<span>{quantity}</span>
-<button className='px-2 py-1 hover:bg-gray-100 transition' onClick={handleIncrease}>
-<FaPlus size={12}/>
-</button>
-<button className={`${cartItems.some(i=>i.id==data._id)?"bg-gray-800":"bg-[#ff4d2d]"} text-white px-3 py-2 transition-colors`}  onClick={()=>{
-    quantity>0?dispatch(addToCart({
-          id:data._id,
-          name:data.name,
-          price:data.price,
-          image:data.image,
-          shop:data.shop,
-          quantity,
-          foodType:data.foodType
-})):null}}>
-<FaShoppingCart size={16}/>
-</button>
-</div>
-</div>
-
-
+        <div className='flex items-center bg-gray-50 rounded-full border border-gray-100 p-1 shadow-sm'>
+          <button className='w-7 h-7 flex items-center justify-center rounded-full bg-white text-gray-600 hover:text-[#ff4d2d] hover:shadow-sm transition-all' onClick={handleDecrease}>
+            <FaMinus size={10}/>
+          </button>
+          <span className='w-6 text-center font-semibold text-gray-800 text-sm'>{quantity}</span>
+          <button className='w-7 h-7 flex items-center justify-center rounded-full bg-white text-gray-600 hover:text-[#ff4d2d] hover:shadow-sm transition-all' onClick={handleIncrease}>
+            <FaPlus size={10}/>
+          </button>
+          <button className={`ml-2 w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 ${cartItems.some(i=>i.id==data._id) ? "bg-gray-800 text-white shadow-md" : "bg-[#ff4d2d] text-white hover:bg-[#e64323] hover:shadow-lg hover:shadow-[#ff4d2d]/30"}`} onClick={()=>{
+              quantity>0?dispatch(addToCart({
+                    id:data._id,
+                    name:data.name,
+                    price:data.price,
+                    image:data.image,
+                    shop:data.shop,
+                    quantity,
+                    foodType:data.foodType
+          })):null}}>
+            <FaShoppingCart size={14}/>
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
